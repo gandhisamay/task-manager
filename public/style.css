@@ -1,0 +1,9 @@
+.fa-trash-alt:hover {
+  transform: scale(1.2);
+  transition: transform 200ms ease-in-out;
+}
+
+.fa-pen:hover {
+  transform: scale(1.2);
+  transition: transform 200ms ease-in-out;
+}
