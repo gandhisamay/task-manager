@@ -13,17 +13,14 @@ mongoose.connect('mongodb://localhost:27017/todo-list', { useNewUrlParser: true,
     })
 
 const taskSchema = new mongoose.Schema({
-    tasks: [{
-        title: {
-            type: String,
-            required: true,
-        }, details: String
-    }],
+    title: {
+        type: String,
+        required: true,
+    }, 
+    details: String,
 })
 
 const Task = mongoose.model('Task', taskSchema);
-
-let user = Task({tasks:[]});
 
 app.set('view engine', 'ejs')
 app.use(express.static('./'));
@@ -32,21 +29,39 @@ app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 
 app.get('/', async (req, res) => {
-    let data = await Task.find({});
-    for(let dat of data){
-        console.log(dat.tasks[0].title);
-    }
-    res.render('tasks', { data });
+    let tasks = await Task.find({});
+    res.render('tasks', { tasks });
 })
 
 app.get('/new', (req, res) => {
     res.render('new');
 })
 
+app.get('/edit/:id', async (req, res) => {
+    let { id } = req.params;
+    let task = await Task.findById(id);
+    console.log(task);
+    res.render('edit', { task });
+})
+
+app.delete('/delete/:id', async (req, res) => {
+    let { id } = req.params;
+    await Task.findByIdAndDelete(id);
+    res.redirect('/');
+})
+
+app.put('/', async (req, res) => {
+    let { id } = req.params;
+    let { title, details } = req.body;
+    console.log(title, details);
+    await Task.updateOne({id}, { title, details }, { runValidators: true });
+    res.redirect('/');
+})
+
 app.post('/', async (req, res) => {
     let { title, details } = req.body;
-    user.tasks.push({title, details})
-    await user.save();
+    let task = Task({title, details});
+    await task.save();
     res.redirect('/');
 })
 
