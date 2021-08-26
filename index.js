@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const methodOverride = require('method-override')
 const app = express()
 
-mongoose.connect('mongodb://localhost:27017/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://task-manager-sg.herokuapp.com/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("MONGO CONNECTION OPEN!!!")
     })
